@@ -1,4 +1,5 @@
 #!/usr/bin/python/
+###################################################################################################################
 
 class Dnode:
 	"""dictionary node"""
@@ -51,17 +52,154 @@ def finder (dict , word):
 	else:
 		return finder(dict[ord(word[0]) - ord('a')].next , word[1:])
 
+
+	'''trial = ["abominable" , "adj"]
+	listed=listify(trial[0])
+
+	addto(dicti,trial,listed)
+	addto(dicti , ["abominabl" , "lklkl"] , listify("abominabl"))
+	a = find(dicti , "abominabl")
+	print(a)'''
+
+	   
+####################################################################################################################
+
+
+
+#print(dicti)
+
+mainlist = []
+ref=0
+
+def allcaps(stri):
+	if(stri==""):
+		a=False
+	
+	else:
+		a=True
+		for c in stri:
+			if((not c=='\r') and (not (ord(c) >= ord('A')) and (ord(c) <= ord('Z')) )):
+				a=False
+
+	return a
+
+def partofspeech(stri):
+	ref=len(stri)
+	#print(ref)
+	for i in range(ref):
+		if(stri[i]=='.'):
+			break
+
+	#print(i)
+	if i==ref-1:
+		return "ditch"
+
+	else:
+		j=i
+		while(stri[j] != ','):
+			j=j-1
+
+		return stri[j+2:i]
+
+
+#print(partofspeech(" dejnkrbak , ejnrfkjbwkjrnfbw, ewfbnkjrfbekj, n., dfknerwjnweihrgbiwhrb"))
+
+'''i=0
+
+def extract(stri):
+
+    while(not (stri[i] == '\n' and stri[i+1] == '\n' and stri[i+2] == '\n' and stri[i+3] == '\n')):
+		diction = ''
+		speech = ''
+
+		while(not (stri[i-1] == '\n' and
+			ord(stri[i]) <= ord('Z') and ord(stri[i]) >= ord('A') and ord(stri[i+1]) <= ord('Z') and ord(stri[i+1]) >= ord('A'))):
+			i+=1
+
+		j=i
+
+		while(stri[j] != '\n'):
+
+			j+=1
+
+		diction = stri[i:j]
+
+		k=j
+
+		while(stri[k] != ','):
+			k+=1
+
+		l=k+2
+
+		while(stri[l] != '.'):
+			l+=1
+
+		i=l
+
+		speech = stri[(k+2):l'''
+
+def makelist(lis):
+	p=len(lis)
+	a=''
+	for i in range(p-2):
+		#print(allcaps(lis[i+1]))
+		if (lis[i]=='\r' and allcaps(lis[i+1])):
+			q=partofspeech(lis[i+2])
+			if q!="ditch":
+			#a=list[lis[i+1],partofspeech(lis[i+2])]
+				a=[lis[i+1],partofspeech(lis[i+2])]
+
+			#print(list(lis[i+1],partofspeech(lis[i+2])))
+				mainlist.append(a)
+
+
+
+
 if __name__=="__main__":
 	file = open("dictionary.txt" , 'r')
 	dictionary = ""
 
+	dicti = [False]*26
+
 	for chunk in file:
 		dictionary+=chunk
+	dictionary=dictionary.split("\n")
+	print("Building list...")
+	#print(dictionary[0:5])
+	#print(dictionary[0])
+	#print(dictionary[0] == '\r')
+	#print(dictionary[1])
+	#print(allcaps(dictionary[1]))
+	makelist(dictionary)
+	print("List created!!!")
 	
-	dicti = [False]*26
-	trial = ["abominable" , "adj"]
-	listed=listify(trial[0])
-	addto(dicti,trial,listed)
-	addto(dicti , ["abominabl" , "lklkl"] , listify("abominabl"))
-	a = find(dicti , "abominabl")
-	print(a)
+	#print(mainlist[3][0][:-1])
+	print("Building tree...")
+
+	for word in mainlist:
+		word[0] = word[0][:-1]
+		addto(dicti , word , listify(word[0]))
+	print("Tree created!!!")
+
+	file.close()
+	file = open("output.txt" , 'w')
+	for elem in mainlist:
+		file.write(elem[0])
+		file.write(" - ")
+		file.write(elem[1])
+		file.write("\n")
+	while True:
+		word = raw_input("Enter a word: ")
+		print(find(dicti , word))
+	#mm=mainlist
+	#print(mainlist)
+	#(dictionary)
+
+	#for c in mainlist:
+	#	addto(dicti,c,listify(c[0]))
+
+	#print(mainlist)
+
+
+	#print(mm)
+	#print(allcaps("Defn: The act of abacinating. [R.]"))
