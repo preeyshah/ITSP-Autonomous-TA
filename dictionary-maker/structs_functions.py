@@ -1,5 +1,6 @@
 #!/usr/bin/python/
-###################################################################################################################
+import bs4 #to parse from the html code
+import requests #to get the html code
 
 class Dnode:
 	"""dictionary node"""
@@ -41,8 +42,28 @@ def addto(dict , word , whats_left):
 		addto(dict[ord(whats_left[0]) - ord('a')].next , word , whats_left[1:])
 		return
 
+def find_online(word):
+	base = "http://www.dictionary.com/browse/"
+	link = base+word
+	html_response = requests.get (link)
+	html_code = ""
+	for chunk in html_response.iter_content (100000):
+		html_code+=chunk
+	soup = bs4.BeautifulSoup(html_code , "lxml") #make a bs4 object of the code
+	type = "Does not exsist"
+	b = soup.select('.me')[0].getText()
+	if ord(b[0])<=ord('Z') and ord(b[0])>=ord('A'):
+		return "proper_noun"
+	a = soup.select('.dbox-pg')
+	if len(a) > 0:
+		type = a[0].getText() #go through the source code and find out where the lyrics are stored.
+	return type
+
 def find(dict,word):
-	return finder(dict,listify(word))
+	offline_answer = finder(dict,listify(word))
+	if offline_answer == "":
+		return find_online(word)
+	return offline_answer
 
 def finder (dict , word):
 	if (dict[ord(word[0]) - ord('a')] == False):
