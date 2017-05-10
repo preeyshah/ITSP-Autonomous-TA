@@ -107,11 +107,11 @@ def is_number(string):
 	else:
 		return False
 
-def add_to_dictionary(string):
+def add_to_dictionary(dictionary , string):
 	words = string.split("/")[:-1]
 	for word in words:
 		a = word.split("-")
-		addto(dict , a , listify(a[0]))
+		addto(dictionary , a , listify(a[0]))
 
 dict = [False]*26
 
@@ -121,9 +121,9 @@ if __name__=="__main__":
 	print("Building dictionary")
 	for chunk in input1:
 		dic_yet+=chunk
-	add_to_dictionary(dic_yet)
+	add_to_dictionary(dict , dic_yet)
 	print("Done")
-	input = open("book2.txt" , 'r')
+	input = open("book4.txt" , 'r')
 	output = open("output.txt" , 'w')
 	input_set = ""
 	for chunk in input:
